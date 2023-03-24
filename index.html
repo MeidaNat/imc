@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cálculo de IMC</title>
+</head>
+
+<style>
+  :root {
+    min-height: 100vh;
+    min-width: 100vh;
+    display: grid;
+    place-items: center;
+
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    height: 100%;
+    width: 100%;
+
+    padding: 2rem;
+    display: grid;
+    place-items: center;
+    background-color: burlywood;
+  }
+
+  main {
+    width: clamp(300px, 50%, 500px);
+    height: 100%;
+
+    display: flex;
+
+    flex-direction: column;
+    row-gap: 2rem;
+    justify-content: center;
+    align-items: center;
+  }
+
+  form {
+    width: 100%;
+    padding: 1rem;
+    border: solid 1px #ccc;
+    border-radius: 0.25rem;
+    background-color: wheat;
+  }
+
+  hr {
+    width: 100%;
+  }
+
+  .resultado {
+    width: 100%;
+    padding: 1rem;
+    border: solid 1px #ccc;
+    border-radius: 0.25rem;
+    background-color: wheat;
+
+    display: grid;
+    grid-template-areas: 
+      "titulo resultado"
+      "mensagem mensagem";
+  }
+
+  .resultado strong {
+    grid-area: titulo;
+  }
+
+  .resultado div {
+    grid-area: resultado;
+    place-self: end;
+  }
+
+  .resultado p {
+    grid-area: mensagem;
+    place-self: center;
+  }
+
+  form div {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  form div input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 0.25rem;
+  }
+
+  form input[type="submit"] {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 0.25rem;
+    background-color: #ccc;
+    cursor: pointer;
+  }
+
+  form input[type="submit"]:hover {
+    background-color: #aaa;
+  }
+</style>
+
+<body>
+  <main>
+    <form>
+      <div>
+        <label for="peso">Peso (kg):</label>
+        <input type="number" value="80" step="0.01" name="peso" id="peso" required>
+      </div>
+      <br>
+      <div>
+        <label for="altura">Altura (m):</label>
+        <input type="number" value="1.70" step="0.01" name="altura" id="altura" required>
+      </div>
+      <br>
+      <input type="submit" value="Calcular">
+    </form>
+
+    <hr>
+    <div class="resultado">
+      <strong>Resultado:</strong>
+      <div id="resultado"></div>
+      <p id="mensagem"></p>
+    </div>
+  </main>
+</body>
+
+<script>
+  const peso = document.querySelector('#peso');
+  const altura = document.querySelector('#altura');
+  const resultado = document.querySelector('#resultado');
+  const mensagem = document.querySelector('#mensagem');
+  const form = document.querySelector('form');
+
+  function calcIMC(peso, altura) {
+    return (peso / (altura * altura)).toFixed(2);
+  }
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const { imc, message, color } = imcMessage(peso.value, altura.value);
+
+    resultado.innerHTML = imc.replace('.', ',');
+    mensagem.innerHTML = message;
+    mensagem.style.color = color;
+  });
+
+  function imcMessage(peso, altura) {
+    const imc = calcIMC(peso, altura);
+
+    if (imc < 18.5) {
+      return { imc, message: "Abaixo do peso", color: "red" };
+    } else if (imc < 25) {
+      return { imc, message: "Peso normal", color: "green" };
+    } else if (imc < 30) {
+      return { imc, message: "Sobrepeso", color: "orange" };
+    } else if (imc < 35) {
+      return { imc, message: "Obesidade grau 1", color: "red" };
+    } else if (imc < 40) {
+      return { imc, message: "Obesidade grau 2", color: "red" };
+    } else {
+      return { imc, message: "Obesidade grau 3", color: "red" };
+    }
+  }
+</script>
+
+</html>
